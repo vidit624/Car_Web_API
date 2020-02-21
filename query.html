@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="blockchain.css">
+ <script>
+ window.onload = function() {
+ document.getElementById("back").onclick = function(){
+ 	window.location.href = "index.html";
+ }
+ document.getElementById("Save").onclick = function fun() {
+var dvTable = document.getElementById("dvTable");
+ var x = document.forms["myForm"]["userId"].value;
+ var y = document.forms["myForm"]["chasisNumber"].value;
+ var z = document.forms["myForm"]["peers"].value;
+ result= "{\n \"channelID\": \"cartrackingchannel\",\n \"ccId\": \"ctrack\",\n \"userId\": \""+x+"\",\n \"funcName\": \"queryHistory\",\n \"args\": [ \""+y+"\"\n],\n \"peers\": [\n\""+z+"\"\n]\n}";
+  if (z=="peer0.vectorcars.com") {
+	 	var Url = "http://localhost:9090/api/query";
+	}
+	else if(z=="peer0.wbrta.gov.in"){
+		var Url = "http://localhost:9091/api/query";
+	}
+	else if(z=="peer0.jamesdistributers.net"){
+ 		var Url = "http://localhost:9092/api/query";
+ 	}
+ var xhr = new XMLHttpRequest();
+ xhr.open('POST', Url, true);
+ xhr.send(result);
+ xhr.onreadystatechange = processRequest;
+ function processRequest(e) {
+ if (xhr.readyState == 4 && xhr.status == 200) {
+	var response1 = JSON.parse(xhr.responseText);
+	var size = response1.payload.payload.length;
+	alert(response1.payload.messsage);
+	document.getElementById("myTable").style.display='inline-block';
+	// var table1 = document.getElementById("myTable");
+	var cell=[];
+	var cell1=[];
+	document.getElementById("isSuccess").innerHTML= response1.payload.isSuccess;
+	document.getElementById("ccStatus").innerHTML= response1.payload.ccStatus;
+	document.getElementById("serverTs").innerHTML= response1.serverTs;
+	for (var i = 0; i<= size-1; i++) {
+		var table = document.createElement('TABLE');
+        table.border="1px";
+        table.style.margin= "10px";
+		for (var j = 0; j < 13 ; j++) {
+			var row = table.insertRow(j);
+			cell[j]=row.insertCell(0);
+			cell1[j]=row.insertCell(1);
+		}
+		cell[0].innerHTML = "Chasis Number";
+		cell[1].innerHTML = "Color";
+		cell[2].innerHTML = "Dealer";
+		cell[3].innerHTML = "License Number";
+		cell[4].innerHTML = "Make Year";
+		cell[5].innerHTML = "Manufacturer";
+		cell[6].innerHTML = "Model";
+		cell[7].innerHTML = "Object Type";
+		cell[8].innerHTML = "Owner";
+		cell[9].innerHTML = "Status";
+		cell[10].innerHTML = "Transaction ID";
+		cell[11].innerHTML = "Timestamp";
+		cell[12].innerHTML = "Updated By";
+		cell1[0].innerHTML = response1.payload.payload[i].chasisNumber;
+		cell1[1].innerHTML = response1.payload.payload[i].color;
+		cell1[2].innerHTML = response1.payload.payload[i].dealer;
+		cell1[3].innerHTML = response1.payload.payload[i].licNumber;
+		cell1[4].innerHTML = response1.payload.payload[i].makeYear;
+		cell1[5].innerHTML = response1.payload.payload[i].manufacturer;
+		cell1[6].innerHTML = response1.payload.payload[i].model;
+		cell1[7].innerHTML = response1.payload.payload[i].objType;
+		cell1[8].innerHTML = response1.payload.payload[i].owner;
+		cell1[9].innerHTML = response1.payload.payload[i].status;
+		cell1[10].innerHTML = response1.payload.payload[i].trxnId;
+		cell1[11].innerHTML = response1.payload.payload[i].ts;
+		cell1[12].innerHTML = response1.payload.payload[i].updBy;
+    	dvTable.appendChild(table);
+	}
+}
+}
+}
+}
+</script>
+</head>
+<body>
+ <form name="myForm">
+ 	<fieldset>
+ 		<legend><strong>Query Car Details Form</strong></legend>
+ 		<table>
+		 <tr><td><label>User ID: </label></td>
+		 <td><input type="text" name="userId"/></td></tr>
+		 <tr><td><label>Chasis Number: </label></td>
+		 <td><input type="number" name="chasisNumber"/></td></tr>
+		 <tr><td><label>Peers: </label></td>
+		 <td><select name="peers">
+					<option>peer0.vectorcars.com</option>
+					<option>peer0.wbrta.gov.in</option>
+					<option>peer0.jamesdistributers.net</option>
+				</select></td></tr>
+		 <tr><td><a href="#" class="btn btn-1" id="Save" style="padding-left: 35px;max-width: 180%">
+		<svg>
+			<rect x="0" y="0" fill="none" height="100%" style="width: 40%"/>
+		</svg>
+	 Query
+	</a></td><td><a href="#" class="btn btn-1" id="back" style="padding-left: 35px;max-width: 220%" >
+		<svg>
+			<rect x="0" y="0" fill="none" height="100%" style="width: 25%"/>
+		</svg>
+	 Back
+	</a></td></tr>
+		</table>
+	</fieldset>
+<br><br>
+ <table border="1px"  id="myTable" style="display: none; margin: 20px;">
+ <tr><td>Success :</td><td id="isSuccess"></td></tr>
+ <tr><td>ccStatus :</td><td id="ccStatus"></td></tr>
+ <tr><td>Server Timestamp :</td><td id="serverTs"></td></tr>
+ </table>
+ <div id="dvTable"></div>
+</form>
+</body>
+</html>

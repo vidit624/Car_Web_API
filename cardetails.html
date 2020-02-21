@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="blockchain.css">
+ <script>
+ window.onload = function() {
+ document.getElementById("back").onclick = function(){
+ 	window.location.href = "index.html";
+ }
+ document.getElementById("Save").onclick = function fun() {
+ var x = document.forms["myForm"]["userId"].value;
+ var y = document.forms["myForm"]["chasisNumber"].value;
+ var z = document.forms["myForm"]["makeYear"].value;
+ var a = document.forms["myForm"]["model"].value;
+ var b = document.forms["myForm"]["color"].value;
+ result= "{\n \"channelID\": \"cartrackingchannel\",\n \"ccId\": \"ctrack\",\n \"userId\": \""+x+"\",\n \"funcName\": \"createCarDetails\",\n \"args\": [{\n \"chasisNumber\": \""+y+"\",\n \"makeYear\": \""+z+"\",\n \"model\": \""+a+"\",\n \"color\": \""+b+"\"\n}\n],\n \"peers\": [\n\"peer0.vectorcars.com\"\n]\n}";
+ var Url = "http://localhost:9090/api/invoke";
+ var xhr = new XMLHttpRequest();
+ xhr.open('POST', Url, true);
+ xhr.send(result);
+ xhr.onreadystatechange = processRequest;
+ function processRequest(e) {
+ if (xhr.readyState == 4 && xhr.status == 200) {
+ var response1 = JSON.parse(xhr.responseText);
+ alert(response1.payload.messsage);
+ document.getElementById("myTable").style.display='inline-block';
+ document.getElementById("isSuccess").innerHTML = response1.payload.isSuccess;
+ document.getElementById("chasisNumber").innerHTML = response1.payload.payload.chasisNumber;
+ document.getElementById("color").innerHTML = response1.payload.payload.color;
+ document.getElementById("dealer").innerHTML = response1.payload.payload.dealer;
+ document.getElementById("licNumber").innerHTML = response1.payload.payload.licNumber;
+ document.getElementById("makeYear").innerHTML = response1.payload.payload.makeYear;
+ document.getElementById("manufacturer").innerHTML = response1.payload.payload.manufacturer;
+ document.getElementById("model").innerHTML = response1.payload.payload.model;
+ document.getElementById("objType").innerHTML = response1.payload.payload.objType;
+ document.getElementById("owner").innerHTML = response1.payload.payload.owner;
+ document.getElementById("status").innerHTML = response1.payload.payload.status;
+ document.getElementById("trxnId").innerHTML = response1.payload.payload.trxnId;
+ document.getElementById("ts").innerHTML = response1.payload.payload.ts;
+ document.getElementById("updBy").innerHTML = response1.payload.payload.updBy;
+ document.getElementById("ccStatus").innerHTML = response1.payload.ccStatus;
+ document.getElementById("serverTs").innerHTML = response1.serverTs;
+ }
+ }
+ }
+ }
+</script>
+</head>
+<body>
+ <form name="myForm">
+ 	<fieldset>
+ 		<legend><strong>Car Details Form</strong></legend>
+ 		<table>
+		 <tr><td><label>User ID: </label></td>
+		 <td><input type="text" name="userId"/></td></tr>
+		 <tr><td><label>Chasis Number: </label></td>
+		 <td><input type="number" name="chasisNumber"/></td></tr>
+		 <tr><td><label>Year of Manufacturing: </label></td>
+		 <td><input type="number" name="makeYear"/></td></tr>
+		 <tr><td><label>Model: </label></td>
+		 <td><input type="text" name="model"/></td></tr>
+		 <tr><td><label>Color: </label></td>
+		 <td><input type="text" name="color"/></td></tr>
+		 <tr><td><a href="#" class="btn btn-1" id="Save" style="padding-left: 35px;max-width: 140%">
+		<svg>
+			<rect x="0" y="0" fill="none" height="100%" style="width: 40%"/>
+		</svg>
+	 Create
+	</a></td><td><a href="#" class="btn btn-1" id="back" style="padding-left: 35px;" >
+		<svg>
+			<rect x="0" y="0" fill="none" height="100%" style="width: 25%"/>
+		</svg>
+	 Back
+	</a></td></tr>
+		</table>
+	</fieldset>
+ <br><br>
+ <table border="1" id="myTable" style="display: none;">
+ <tr><td>Success :</td><td id="isSuccess"></td></tr>
+ <tr><td>Chasis Number :</td><td id="chasisNumber"></td></tr>
+ <tr><td>Color :</td><td id="color"></td></tr>
+ <tr><td>Dealer :</td><td id="dealer"></td></tr>
+ <tr><td>License Number :</td><td id="licNumber"></td></tr>
+ <tr><td>Make Year :</td><td id="makeYear"></td></tr>
+ <tr><td>Manufacturer :</td><td id="manufacturer"></td></tr>
+ <tr><td>Model :</td><td id="model"></td></tr>
+ <tr><td>Object Type :</td><td id="objType"></td></tr>
+ <tr><td>Owner :</td><td id="owner"></td></tr>
+ <tr><td>Status :</td><td id="status"></td></tr>
+ <tr><td>Transaction ID :</td><td id="trxnId"></td></tr>
+ <tr><td>Timestamp :</td><td id="ts"></td></tr>
+ <tr><td>Updated By :</td><td id="updBy"></td></tr>
+ <tr><td>ccStatus :</td><td id="ccStatus"></td></tr>
+ <tr><td>Server Timestamp :</td><td id="serverTs"></td></tr>
+ </table>
+</form>
+</body>
+</html>
